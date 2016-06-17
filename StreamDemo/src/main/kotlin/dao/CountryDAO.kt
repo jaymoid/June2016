@@ -22,43 +22,45 @@ fun loadCountries(): List<Country> {
 class CountryDAO {
     private val countries: List<Country> by lazy { loadCountries() }
 
-    fun findCountryByIsoCode(isoCode:String) : Country?{
-        return countries.asSequence().filter{ it.isoCode == isoCode }.firstOrNull()
+    fun findCountryByIsoCode(isoCode: String): Country? {
+        return countries.filter{it.isoCode == isoCode}.firstOrNull()
     }
 
-    fun findCountriesByRegion(region: String) : List<Country> {
+    fun findCountriesByRegion(region: String): List<Country> {
         return countries.filter { it.region == region }
     }
 
-    fun findCountriesByRegionAndSubregion(region: String, subregion: String) : List<Country> {
-        return countries.filter { it.region == region }
-                        .filter { it.subregion == subregion }
-                        .sortedBy { it.isoCode }
+    fun findCountriesByRegionAndSubregion(region: String, subregion: String): List<Country> {
+        return countries
+                .filter { it.region == region }
+                .filter { it.subregion == subregion }
     }
 
 
-    fun fetchCapitalCities(): List<String>{
-        return countries.map { it.capital }
+    fun fetchCapitalCities(): List<String> {
+        return countries
+                .filter { !it.capital.isBlank() }
+                .map { it.capital }
     }
 
-    fun findLargestCountriesByRegion(region:String, rowCount:Int = 5): List<Country>{
-        return countries.filter{ it.region == region }
-                        .sortedByDescending{ it.area }
-                        .take(rowCount)
+    fun findLargestCountriesByRegion(region: String, rowCount: Int = 5): List<Country> {
+        return countries
+                .filter {it.region == region}
+                .sortedByDescending{it.area}
+                .take(rowCount)
+    }
+/*
+    fun findAverageSizeOfCountries(): Double {
+        return null
     }
 
-    fun findAverageSizeOfCountries(): Double{
-        return countries.map{it.area}.average()
+    fun splitByLandLockedStatus(): Pair<List<Country>, List<Country>> {
+        return null
     }
 
-    fun splitByLandLockedStatus(): Pair<List<Country>,List<Country>>{
-        return countries.partition { it.landlocked }
+    fun fetchCountryNamesGroupedByRegion(): Map<String, List<String>> {
+        return null
     }
-
-    fun fetchCountryNamesGroupedByRegion(): Map<String, List<String>>{
-        return countries.groupBy{ it.region }
-                        .mapValues { it.value.map { it.name } }
-    }
-
+    */
 }
 
